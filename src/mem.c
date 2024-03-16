@@ -48,11 +48,13 @@ void *mem_alloc(size_t size)
         return ptr;
 }
 
-void mem_free(void *ptr)
-{
-        if (ptr == NULL)
-                return;
-        free(ptr);
-        ptr = NULL;
-}
+/*
+ * inline void mem_free(void *ptr)
+ * {
+ *         if (ptr == NULL)
+ *                 return;
+ *         free(ptr);
+ *         *(&ptr) = NULL;
+ * }
+ */
 

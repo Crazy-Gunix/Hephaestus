@@ -32,6 +32,7 @@
 #include "file_util.h"
 
 #include <stdio.h>
+#include <stdlib.h>
 
 #include <raylib.h>
 
@@ -64,14 +65,19 @@ struct file_dat read_file(char *path)
                 fp = NULL;
                 return fd;
         }
-        rewind(fp);
+        if (fseek(fp, 0, 0) != 0) {
+                perror("fseek");
+                fclose(fp);
+                fp = NULL;
+                return fd;
+        }
 
         char *data = mem_alloc(size);
 
         fread(data, size, 1, fp);
         if (ferror(fp)) {
                 perror("fread");
-                mem_free(data);
+                if (data != NULL) {free(data); data = NULL;}
         } else {
                 fd.data = data;
                 fd.len = size;

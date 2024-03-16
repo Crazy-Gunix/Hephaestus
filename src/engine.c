@@ -73,8 +73,9 @@ void engine_run(struct engine *e)
                         if (!e->file_to_load && !e->file_loaded) {
                                 FilePathList f = LoadDroppedFiles();
                                 e->file_to_load = true;
-                                e->file_to_load_path = (char*)mem_alloc(strlen(f.paths[0]) + 1);
-                                strcpy(e->file_to_load_path, f.paths[0]);
+                                const size_t size = strlen(f.paths[0]) + 1;
+                                e->file_to_load_path = (char*)mem_alloc(size);
+                                strncpy(e->file_to_load_path, f.paths[0], size);
                                 UnloadDroppedFiles(f);
                                 TraceLog(LOG_DEBUG, "file dropped: %s", e->file_to_load_path);
                         } else { // Ignore
@@ -107,17 +108,25 @@ void engine_run(struct engine *e)
                                         } else if (IsFileExtension(e->file_to_load_path, ".tgz")) {
                                                 ls_archive(e->loaded_data, fd.len);
                                         }
-                                        mem_free(e->loaded_data);
+                                        if (e->loaded_data != NULL) {
+                                                free(e->loaded_data);
+                                                e->loaded_data = NULL;
+                                        }
                                 } else {
                                         TraceLog(LOG_ERROR, "failed to load file");
                                 }
-                                mem_free(e->file_to_load_path);
+                                if (e->file_to_load_path != NULL) {
+                                        free(e->file_to_load_path);
+                                        e->file_to_load_path = NULL;
+                                }
                        }
                        if (GuiButton((Rectangle){255, 255, 125, 30}, "No")) {
                                 e->file_to_load = false;
                                 e->file_loaded = false;
-                                mem_free(e->file_to_load_path);
-                       }
+                                if (e->file_to_load_path != NULL) {
+                                        free(e->file_to_load_path);
+                                        e->file_to_load_path = NULL;
+                                }}
                 }
                 if (e->file_loaded)
                         e->file_loaded = lua_script_loop(e->L);
