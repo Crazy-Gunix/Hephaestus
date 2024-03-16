@@ -65,7 +65,7 @@ end
 
 ## Support
 
-For support, email <project.gunix@skiff.com>.
+For support, email <mailto:project.gunix@skiff.com>.
 
 ## Roadmap
 
@@ -74,11 +74,11 @@ For support, email <project.gunix@skiff.com>.
 - Create asset management utilities (textures, audio, etc).
 - Combine archive utils, Lua, assets, and JSON/YAML configs to create "game packs".
 - Eventually remove raylib as a dependency:
-    1. Add support for Nuklear/cimgui.
-    2. Add support for alternative model loading libraries.
-    3. Use libsndfile with OpenAL or PortAudio to create a custom audio engine.
-    4. Create a custom OpenGL 4 instance through GLFW + GLAD.
-    5. Vulkan??
+  1. Add support for Nuklear/cimgui.
+  2. Add support for alternative model loading libraries.
+  3. Use libsndfile with OpenAL or PortAudio to create a custom audio engine.
+  4. Create a custom OpenGL 4 instance through GLFW + GLAD.
+  5. Vulkan??
 
 ## Contributing
 

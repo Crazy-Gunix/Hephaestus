@@ -31,7 +31,6 @@
 
 #include "engine.h"
 
-#include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -45,8 +44,54 @@
 #include "mem.h"
 #include "lua_util.h"
 #include "file_util.h"
-#include "json_util.h"
 #include "archive_util.h"
+
+
+
+static inline void load_file_dat(struct engine *e)
+{
+        FilePathList f = LoadDroppedFiles();
+        e->loadable_file = true;
+        
+        const size_t size = strlen(f.paths[0]) + 1;
+        e->loadable_path = (char*)mem_alloc(size);
+        strncpy(e->loadable_path, f.paths[0], size);
+        
+        UnloadDroppedFiles(f);
+        TraceLog(LOG_DEBUG, "file dropped: %s", e->loadable_path);
+        return;
+}
+
+static inline void yes_load_file(struct engine *e)
+{
+        struct file_dat fd = read_file(e->loadable_path);
+        e->loadable_file = false;
+
+        if (fd.len == 0) {
+                TraceLog(LOG_ERROR, "failed to load file");
+                free(e->loadable_path);
+                e->loadable_path = NULL;
+                return;
+        }
+
+        e->loaded_data = fd.data;
+
+        if (IsFileExtension(e->loadable_path, ".lua")) {
+                lua_script_init(e->L, e->loaded_data);
+                e->file_loaded = true;
+        } else if (IsFileExtension(e->loadable_path, ".tgz")) {
+                ls_archive(e->loaded_data, fd.len);
+        }
+
+        free(e->loaded_data);
+        free(e->loadable_path);
+        e->loaded_data = NULL;
+        e->loadable_path = NULL;
+
+        return;
+}
+
+
 
 void engine_init(struct engine *e)
 {
@@ -70,17 +115,10 @@ void engine_run(struct engine *e)
 
         while (!WindowShouldClose()) {
                 if (IsFileDropped()) {
-                        if (!e->file_to_load && !e->file_loaded) {
-                                FilePathList f = LoadDroppedFiles();
-                                e->file_to_load = true;
-                                const size_t size = strlen(f.paths[0]) + 1;
-                                e->file_to_load_path = (char*)mem_alloc(size);
-                                strncpy(e->file_to_load_path, f.paths[0], size);
-                                UnloadDroppedFiles(f);
-                                TraceLog(LOG_DEBUG, "file dropped: %s", e->file_to_load_path);
-                        } else { // Ignore
+                        if (!e->loadable_file && !e->file_loaded)
+                                load_file_dat(e);
+                        else // Ignore
                                 UnloadDroppedFiles(LoadDroppedFiles());
-                        }
                 }
 
                 if (IsKeyDown(KEY_F5) && e->file_loaded) {
@@ -88,45 +126,24 @@ void engine_run(struct engine *e)
                         e->file_loaded = false;
                 }
 
-                BeginDrawing();
+                BeginDrawing(); // Start Drawing Proccess
 
                 ClearBackground(bg_color);
 
-                if (e->file_to_load && !e->file_loaded) {
+                if (e->loadable_file && !e->file_loaded) {
                        DrawText("Load File", 200, 150, 32, RAYWHITE);
-                       DrawText(GetFileName(e->file_to_load_path), 200, 200, 32, RAYWHITE);
+                       DrawText(GetFileName(e->loadable_path),
+                                       200, 200, 32, RAYWHITE);
+
                        GuiSetStyle(BUTTON, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
-                       if (GuiButton((Rectangle){25, 255, 125, 30}, "Yes")) {
-                                e->file_to_load = false;
-                                struct file_dat fd = read_file(e->file_to_load_path);
-                                if (fd.len != 0) {
-                                        e->loaded_data = fd.data;
-                                        printf("%s\n", GetFileExtension(e->file_to_load_path));
-                                        if (IsFileExtension(e->file_to_load_path, ".lua")) {
-                                                lua_script_init(e->L, e->loaded_data);
-                                                e->file_loaded = true;
-                                        } else if (IsFileExtension(e->file_to_load_path, ".tgz")) {
-                                                ls_archive(e->loaded_data, fd.len);
-                                        }
-                                        if (e->loaded_data != NULL) {
-                                                free(e->loaded_data);
-                                                e->loaded_data = NULL;
-                                        }
-                                } else {
-                                        TraceLog(LOG_ERROR, "failed to load file");
-                                }
-                                if (e->file_to_load_path != NULL) {
-                                        free(e->file_to_load_path);
-                                        e->file_to_load_path = NULL;
-                                }
-                       }
+                       if (GuiButton((Rectangle){25, 255, 125, 30}, "Yes"))
+                               yes_load_file(e);
                        if (GuiButton((Rectangle){255, 255, 125, 30}, "No")) {
-                                e->file_to_load = false;
+                                e->loadable_file = false;
                                 e->file_loaded = false;
-                                if (e->file_to_load_path != NULL) {
-                                        free(e->file_to_load_path);
-                                        e->file_to_load_path = NULL;
-                                }}
+                                free(e->loadable_path);
+                                e->loadable_path = NULL;
+                       }
                 }
                 if (e->file_loaded)
                         e->file_loaded = lua_script_loop(e->L);
@@ -135,18 +152,25 @@ void engine_run(struct engine *e)
                 DrawFPS(0, 0);
 #endif
 
-                EndDrawing();
-        } 
+                EndDrawing(); // End Drawing Process
+        }
+
+        return;
 }
 
 void engine_cleanup(struct engine *e)
 {
         if (e->file_loaded)
                 lua_script_exit(e->L);
-
         lua_close(e->L);
         TraceLog(LOG_INFO, "Closed Lua state");
+
         CloseWindow();
+
+        if (e->loadable_path != NULL) {
+                free(e->loadable_path);
+                e->loadable_path = NULL;
+        }
 
         return;
 }

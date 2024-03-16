@@ -41,20 +41,12 @@ void *mem_alloc(size_t size)
 {
         void *ptr = NULL;
         ptr = malloc(size);
+
         if (ptr == NULL) {
                 perror("malloc");
                 abort();
         }
+
         return ptr;
 }
-
-/*
- * inline void mem_free(void *ptr)
- * {
- *         if (ptr == NULL)
- *                 return;
- *         free(ptr);
- *         *(&ptr) = NULL;
- * }
- */
 

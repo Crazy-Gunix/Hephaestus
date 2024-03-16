@@ -55,7 +55,7 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behaviour may be
-reported to the community leaders responsible for enforcement at <project.gunix@skiff.com>.
+reported to the community leaders responsible for enforcement at <mailto:project.gunix@skiff.com>.
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the

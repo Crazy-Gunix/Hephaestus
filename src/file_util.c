@@ -77,7 +77,8 @@ struct file_dat read_file(char *path)
         fread(data, size, 1, fp);
         if (ferror(fp)) {
                 perror("fread");
-                if (data != NULL) {free(data); data = NULL;}
+                free(data);
+                data = NULL;
         } else {
                 fd.data = data;
                 fd.len = size;

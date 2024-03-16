@@ -49,6 +49,7 @@ void ls_archive(char *buff, size_t len)
         archive_read_support_filter_all(a);
         archive_read_support_format_all(a);
         r = archive_read_open_memory(a, buff, len);
+
         switch (r) {
                 case ARCHIVE_WARN:
                         TraceLog(LOG_WARNING, "%s", archive_error_string(a));
@@ -59,10 +60,12 @@ void ls_archive(char *buff, size_t len)
                         TraceLog(LOG_ERROR, "%s", archive_error_string(a));
                         return;
         }
+
         while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
                 printf("%s\n", archive_entry_pathname(entry));
                 archive_read_data_skip(a);
         }
+
         archive_read_close(a);
         archive_read_free(a);
         return;

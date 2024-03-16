@@ -37,8 +37,27 @@
 
 
 
-static inline bool check_lua(lua_State *L, int r);
-static inline bool call_void_lua(lua_State *L, const char *func_name);
+static inline bool check_lua(lua_State *L, int r)
+{
+        if (r != LUA_OK) {
+                TraceLog(LOG_ERROR, "%s\n", lua_tostring(L, -1));
+                return false;
+        }
+
+        return true;
+}
+
+static inline bool call_void_lua(lua_State *L, const char *func_name)
+{
+        lua_getglobal(L, func_name);
+        if (!lua_isfunction(L, -1))
+                return false;
+        if (!check_lua(L, lua_pcall(L, 0, 0, 0)))
+                return false;
+
+        return true;
+}
+
 
 
 
@@ -69,7 +88,9 @@ void lua_script_init(lua_State *L, const char *data)
                 TraceLog(LOG_WARNING, "failed to init lua script");
                 return;
         }
+
         TraceLog(LOG_ERROR, "failed to load lua script");
+        return;
 }
 
 void lua_script_exit(lua_State *L)
@@ -78,7 +99,9 @@ void lua_script_exit(lua_State *L)
                 TraceLog(LOG_DEBUG, "exited lua script successfully");
                 return;
         }
+
         TraceLog(LOG_WARNING, "failed to safely exit lua");
+        return;
 }
 
 bool lua_script_loop(lua_State *L)
@@ -87,27 +110,7 @@ bool lua_script_loop(lua_State *L)
                 TraceLog(LOG_ERROR, "loop script failed");
                 return false;
         }
-        return true;
-}
 
-
-
-inline bool check_lua(lua_State *L, int r)
-{
-        if (r != LUA_OK) {
-                TraceLog(LOG_ERROR, "%s\n", lua_tostring(L, -1));
-                return false;
-        }
-        return true;
-}
-
-inline bool call_void_lua(lua_State *L, const char *func_name)
-{
-        lua_getglobal(L, func_name);
-        if (!lua_isfunction(L, -1))
-                return false;
-        if (!check_lua(L, lua_pcall(L, 0, 0, 0)))
-                return false;
         return true;
 }
 

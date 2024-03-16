@@ -37,12 +37,11 @@
 void tree_json(char *buff)
 {
         json_t *root = NULL;
-        json_error_t error;
+        json_error_t e;
 
-        root = json_loads(buff, 0, &error);
+        root = json_loads(buff, 0, &e);
         if (root == NULL) {
-                TraceLog(LOG_ERROR, "%s(%d): %s",
-                        error.source, error.line, error.text);
+                TraceLog(LOG_ERROR, "%s(%d): %s", e.source, e.line, e.text);
                 return;
         }
 

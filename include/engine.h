@@ -38,11 +38,12 @@
 
 struct engine {
         lua_State *L;
+
         bool init;
 
-        bool file_to_load;
+        bool loadable_file;
         bool file_loaded;
-        char *file_to_load_path;
+        char *loadable_path;
         char *loaded_data;
 };
 
