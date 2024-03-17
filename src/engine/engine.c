@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine.h"
+#include "engine/engine.h"
 
 #include <string.h>
 #include <stdlib.h>
@@ -41,10 +41,10 @@
 #include <raygui.h>
 #include <dark/style_dark.h>
 
-#include "mem.h"
-#include "lua_util.h"
-#include "file_util.h"
-#include "archive_util.h"
+#include "engine/mem.h"
+#include "engine/lua_util.h"
+#include "engine/file_util.h"
+#include "engine/archive_util.h"
 
 
 
@@ -131,14 +131,14 @@ void engine_run(struct engine *e)
                 ClearBackground(bg_color);
 
                 if (e->loadable_file && !e->file_loaded) {
-                       DrawText("Load File", 200, 150, 32, RAYWHITE);
+                       DrawText("Load File", 340, 160, 32, RAYWHITE);
                        DrawText(GetFileName(e->loadable_path),
-                                       200, 200, 32, RAYWHITE);
+                                       340, 192, 32, RAYWHITE);
 
                        GuiSetStyle(BUTTON, TEXT_ALIGNMENT, TEXT_ALIGN_CENTER);
-                       if (GuiButton((Rectangle){25, 255, 125, 30}, "Yes"))
+                       if (GuiButton((Rectangle){256, 256, 128, 32}, "Yes"))
                                yes_load_file(e);
-                       if (GuiButton((Rectangle){255, 255, 125, 30}, "No")) {
+                       if (GuiButton((Rectangle){420, 256, 128, 32}, "No")) {
                                 e->loadable_file = false;
                                 e->file_loaded = false;
                                 free(e->loadable_path);

@@ -16,17 +16,6 @@ endif
 cc = meson.get_compiler('c')
 m_dep = cc.find_library('m', required: false)
 
-src = [
-  'src/main.c',
-  'src/mem.c',
-  'src/engine.c',
-  'src/file_util.c',
-  'src/lua_util.c',
-  'src/json_util.c',
-  'src/archive_util.c',
-  'src/raygui_impl.c'
-]
-
 deps = [
   m_dep,
   raylib_dep,
@@ -41,8 +30,37 @@ incdirs = [
   include_directories('external/raygui/styles')
 ]
 
-executable('hephaestus', src,
+enginel_src = [
+  'src/enginel/enginel.c',
+  'src/enginel/graphics.c',
+  'src/enginel/text.c',
+  'src/enginel/input.c',
+  'src/enginel/window.c'
+]
+
+engine_src = [
+  'src/engine/mem.c',
+  'src/engine/engine.c',
+  'src/engine/file_util.c',
+  'src/engine/lua_util.c',
+  'src/engine/json_util.c',
+  'src/engine/archive_util.c',
+  'src/engine/raygui_impl.c'
+]
+
+enginel = library('enginel', enginel_src,
   dependencies: deps,
   include_directories: incdirs
+)
+engine = library('engine', engine_src,
+  dependencies: deps,
+  include_directories: incdirs,
+  link_with: enginel
+)
+
+executable('hephaestus', 'src/main.c',
+  dependencies: deps,
+  include_directories: incdirs,
+  link_with: engine
 )
 

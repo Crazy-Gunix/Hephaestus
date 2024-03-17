@@ -29,11 +29,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ARCHIVE_UTIL_H
-#define ARCHIVE_UTIL_H
+#ifndef ENGINE_ENGINE_H
+#define ENGINE_ENGINE_H
 
-#include <stddef.h>
+#include <stdbool.h>
 
-void ls_archive(char *buff, size_t len);
+#include <lua.h>
+
+struct engine {
+        lua_State *L;
+
+        bool init;
+
+        bool loadable_file;
+        bool file_loaded;
+        char *loadable_path;
+        char *loaded_data;
+};
+
+void engine_init(struct engine *e);
+void engine_run(struct engine *e);
+void engine_cleanup(struct engine *e);
 
 #endif

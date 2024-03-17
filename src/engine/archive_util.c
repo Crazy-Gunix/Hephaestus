@@ -29,23 +29,45 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "json_util.h"
+#include "engine/archive_util.h"
+
+#include <stdio.h>
 
 #include <raylib.h>
-#include <jansson.h>
+#include <archive.h>
+#include <archive_entry.h>
 
-void tree_json(char *buff)
+
+
+void ls_archive(char *buff, size_t len)
 {
-        json_t *root = NULL;
-        json_error_t e;
+        struct archive *a = NULL;
+        struct archive_entry *entry = NULL;
+        int r;
 
-        root = json_loads(buff, 0, &e);
-        if (root == NULL) {
-                TraceLog(LOG_ERROR, "%s(%d): %s", e.source, e.line, e.text);
-                return;
+        a = archive_read_new();
+        archive_read_support_filter_all(a);
+        archive_read_support_format_all(a);
+        r = archive_read_open_memory(a, buff, len);
+
+        switch (r) {
+                case ARCHIVE_WARN:
+                        TraceLog(LOG_WARNING, "%s", archive_error_string(a));
+                        break;
+                case ARCHIVE_OK:
+                        break;
+                default:
+                        TraceLog(LOG_ERROR, "%s", archive_error_string(a));
+                        return;
         }
 
-        json_decref(root);
+        while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
+                printf("%s\n", archive_entry_pathname(entry));
+                archive_read_data_skip(a);
+        }
+
+        archive_read_close(a);
+        archive_read_free(a);
         return;
 }
 

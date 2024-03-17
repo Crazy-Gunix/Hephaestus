@@ -29,11 +29,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "lua_util.h"
+#include "engine/lua_util.h"
 
 #include <lauxlib.h>
 #include <lualib.h>
 #include <raylib.h>
+
+#include "enginel/enginel.h"
 
 
 
@@ -74,6 +76,8 @@ lua_State *init_lua(void)
 
         luaL_openlibs(L);
         TraceLog(LOG_INFO, "Loaded Lua state successfully");
+
+        load_enginel(L);
 
         return L;
 }

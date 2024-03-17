@@ -29,45 +29,30 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "archive_util.h"
+#include "enginel/window.h"
 
-#include <stdio.h>
-
+#include <lualib.h>
+#include <lauxlib.h>
 #include <raylib.h>
-#include <archive.h>
-#include <archive_entry.h>
 
 
 
-void ls_archive(char *buff, size_t len)
+static int enginel_get_screen_size(lua_State *L)
+{ // get_screen_size() -> (int)w, (int)h
+        if (lua_gettop(L) != 0)
+                return lua_error(L);
+
+        lua_pushnumber(L, GetScreenWidth());
+        lua_pushnumber(L, GetScreenHeight());
+        return 2;
+}
+
+
+
+void load_enginel_window(lua_State *L)
 {
-        struct archive *a = NULL;
-        struct archive_entry *entry = NULL;
-        int r;
+        lua_register(L, "get_screen_size", enginel_get_screen_size);
 
-        a = archive_read_new();
-        archive_read_support_filter_all(a);
-        archive_read_support_format_all(a);
-        r = archive_read_open_memory(a, buff, len);
-
-        switch (r) {
-                case ARCHIVE_WARN:
-                        TraceLog(LOG_WARNING, "%s", archive_error_string(a));
-                        break;
-                case ARCHIVE_OK:
-                        break;
-                default:
-                        TraceLog(LOG_ERROR, "%s", archive_error_string(a));
-                        return;
-        }
-
-        while (archive_read_next_header(a, &entry) == ARCHIVE_OK) {
-                printf("%s\n", archive_entry_pathname(entry));
-                archive_read_data_skip(a);
-        }
-
-        archive_read_close(a);
-        archive_read_free(a);
         return;
 }
 

@@ -29,17 +29,23 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/engine.h"
+#include "engine/json_util.h"
 
-int main(void)
+#include <raylib.h>
+#include <jansson.h>
+
+void tree_json(char *buff)
 {
-        struct engine e = {0};
-        engine_init(&e);
+        json_t *root = NULL;
+        json_error_t e;
 
-        engine_run(&e);
+        root = json_loads(buff, 0, &e);
+        if (root == NULL) {
+                TraceLog(LOG_ERROR, "%s(%d): %s", e.source, e.line, e.text);
+                return;
+        }
 
-        engine_cleanup(&e);
-
-        return 0;
+        json_decref(root);
+        return;
 }
 

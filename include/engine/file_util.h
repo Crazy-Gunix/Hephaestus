@@ -29,16 +29,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef LUA_UTIL_H
-#define LUA_UTIL_H
+#ifndef ENGINE_FILE_UTIL_H
+#define ENGINE_FILE_UTIL_H
 
-#include <stdbool.h>
-#include <lua.h>
+#include <stddef.h>
 
-lua_State *init_lua(void);
+struct file_dat {
+        char *data;
+        size_t len;
+};
 
-void lua_script_init(lua_State *L, const char *data);
-void lua_script_exit(lua_State *L);
-bool lua_script_loop(lua_State *L);
+struct file_dat read_file(char *path);
 
 #endif
+

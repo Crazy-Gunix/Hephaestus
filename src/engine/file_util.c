@@ -29,24 +29,63 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "mem.h"
+#include "engine/file_util.h"
 
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
+
+#include <raylib.h>
+
+#include "engine/mem.h"
 
 
 
-
-void *mem_alloc(size_t size)
+struct file_dat read_file(char *path)
 {
-        void *ptr = NULL;
-        ptr = malloc(size);
+        FILE *fp = NULL;
+        struct file_dat fd = {0};
 
-        if (ptr == NULL) {
-                perror("malloc");
-                abort();
+        fp = fopen(path, "rb");
+        if (fp == NULL) {
+                perror("fopen");
+                return fd;
         }
 
-        return ptr;
+        if (fseek(fp, 0, SEEK_END) != 0) {
+                perror("fseek");
+                fclose(fp);
+                fp = NULL;
+                return fd;
+        }
+
+        const int size = ftell(fp);
+        if (size == -1) {
+                perror("ftell");
+                fclose(fp);
+                fp = NULL;
+                return fd;
+        }
+        if (fseek(fp, 0, 0) != 0) {
+                perror("fseek");
+                fclose(fp);
+                fp = NULL;
+                return fd;
+        }
+
+        char *data = mem_alloc(size);
+
+        fread(data, size, 1, fp);
+        if (ferror(fp)) {
+                perror("fread");
+                free(data);
+                data = NULL;
+        } else {
+                fd.data = data;
+                fd.len = size;
+        }
+
+        fclose(fp);
+        fp = NULL;
+        return fd;
 }
 

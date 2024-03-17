@@ -29,17 +29,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/engine.h"
+#ifndef ENGINE_MEM_H
+#define ENGINE_MEM_H
 
-int main(void)
-{
-        struct engine e = {0};
-        engine_init(&e);
+#include <stddef.h>
 
-        engine_run(&e);
+void *mem_alloc(size_t size);
 
-        engine_cleanup(&e);
-
-        return 0;
-}
-
+#endif

@@ -29,17 +29,40 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/engine.h"
+#include "enginel/text.h"
 
-int main(void)
-{
-        struct engine e = {0};
-        engine_init(&e);
+#include <lualib.h>
+#include <lauxlib.h>
+#include <raylib.h>
 
-        engine_run(&e);
 
-        engine_cleanup(&e);
+
+static int enginel_draw_text(lua_State *L) 
+{ // draw_text(text, x, y, pt, r, g, b, a) -> (nil)
+        if (lua_gettop(L) != 8)
+                return lua_error(L);
+
+        const char *text = lua_tostring(L, 1);
+        const int x = lua_tonumber(L, 2);
+        const int y = lua_tonumber(L, 3);
+        const int pt = lua_tonumber(L, 4);
+        const Color color = {
+                lua_tonumber(L, 5),
+                lua_tonumber(L, 6),
+                lua_tonumber(L, 7),
+                lua_tonumber(L, 8)
+        };
+
+        DrawText(text, x, y, pt, color);
 
         return 0;
 }
 
+
+
+void load_enginel_text(lua_State *L)
+{
+        lua_register(L, "draw_text", enginel_draw_text);
+
+        return;
+}

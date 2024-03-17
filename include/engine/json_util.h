@@ -29,17 +29,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/engine.h"
+#ifndef ENGINE_JSON_UTIL_H
+#define ENGINE_JSON_UTIL_H
 
-int main(void)
-{
-        struct engine e = {0};
-        engine_init(&e);
+void tree_json(char *buff);
 
-        engine_run(&e);
-
-        engine_cleanup(&e);
-
-        return 0;
-}
-
+#endif

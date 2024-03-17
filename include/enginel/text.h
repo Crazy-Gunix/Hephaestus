@@ -29,17 +29,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/engine.h"
+#ifndef ENGINEL_TEXT_H
+#define ENGINEL_TEXT_H
 
-int main(void)
-{
-        struct engine e = {0};
-        engine_init(&e);
+#include <lua.h>
 
-        engine_run(&e);
+void load_enginel_text(lua_State *L);
 
-        engine_cleanup(&e);
-
-        return 0;
-}
+#endif
 

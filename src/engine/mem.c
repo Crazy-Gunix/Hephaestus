@@ -29,11 +29,24 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef MEM_H
-#define MEM_H
+#include "engine/mem.h"
 
-#include <stddef.h>
+#include <stdlib.h>
+#include <stdio.h>
 
-void *mem_alloc(size_t size);
 
-#endif
+
+
+void *mem_alloc(size_t size)
+{
+        void *ptr = NULL;
+        ptr = malloc(size);
+
+        if (ptr == NULL) {
+                perror("malloc");
+                abort();
+        }
+
+        return ptr;
+}
+

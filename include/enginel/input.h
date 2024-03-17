@@ -29,17 +29,12 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef FILE_UTIL_H
-#define FILE_UTIL_H
+#ifndef ENGINEL_INPUT_H
+#define ENGINEL_INPUT_H
 
-#include <stddef.h>
+#include <lua.h>
 
-struct file_dat {
-        char *data;
-        size_t len;
-};
-
-struct file_dat read_file(char *path);
+void load_enginel_input(lua_State *L);
 
 #endif
 

@@ -29,26 +29,11 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ENGINE_H
-#define ENGINE_H
-
-#include <stdbool.h>
+#ifndef ENGINEL_ENGINEL_H
+#define ENGINEL_ENGINEL_H
 
 #include <lua.h>
 
-struct engine {
-        lua_State *L;
-
-        bool init;
-
-        bool loadable_file;
-        bool file_loaded;
-        char *loadable_path;
-        char *loaded_data;
-};
-
-void engine_init(struct engine *e);
-void engine_run(struct engine *e);
-void engine_cleanup(struct engine *e);
+void load_enginel(lua_State *L);
 
 #endif

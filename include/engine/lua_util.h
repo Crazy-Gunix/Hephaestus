@@ -29,9 +29,16 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef JSON_UTIL_H
-#define JSON_UTIL_H
+#ifndef ENGINE_LUA_UTIL_H
+#define ENGINE_LUA_UTIL_H
 
-void tree_json(char *buff);
+#include <stdbool.h>
+#include <lua.h>
+
+lua_State *init_lua(void);
+
+void lua_script_init(lua_State *L, const char *data);
+void lua_script_exit(lua_State *L);
+bool lua_script_loop(lua_State *L);
 
 #endif

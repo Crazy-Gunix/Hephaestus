@@ -29,17 +29,27 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/engine.h"
+#include "enginel/enginel.h"
 
-int main(void)
+#include <lauxlib.h>
+#include <lualib.h>
+#include <raylib.h>
+
+// EngineL
+#include "enginel/window.h"
+#include "enginel/input.h"
+#include "enginel/graphics.h"
+#include "enginel/text.h"
+
+
+
+void load_enginel(lua_State *L)
 {
-        struct engine e = {0};
-        engine_init(&e);
+        load_enginel_window(L);
+        load_enginel_input(L);
+        load_enginel_graphics(L);
+        load_enginel_text(L);
 
-        engine_run(&e);
-
-        engine_cleanup(&e);
-
-        return 0;
+        TraceLog(LOG_INFO, "loaded EngineL");
+        return;
 }
-
