@@ -45,7 +45,14 @@ Binary releases will soon be available.
 
 ## Usage/Examples
 
-A basic Lua script than can be loaded by the engine:
+Controls:
+
+- Escape: Closes window
+- F5: Unload currently loaded file.
+
+To load a script, just drag and drop onto the engine's window.
+
+Here is the format of a loadable script:
 
 ```
 function init() -- Called once loaded.
