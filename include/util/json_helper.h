@@ -29,8 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ENGINE_JSON_UTIL_H
-#define ENGINE_JSON_UTIL_H
+#ifndef UTIL_JSON_HELPER_H
+#define UTIL_JSON_HELPER_H
 
 void tree_json(char *buff);
 

@@ -29,63 +29,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/file_util.h"
+#ifndef UTIL_FILE_H
+#define UTIL_FILE_H
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <stddef.h>
 
-#include <raylib.h>
+struct file_dat {
+        char *data;
+        size_t len;
+};
 
-#include "engine/mem.h"
+struct file_dat read_file(char *path);
 
-
-
-struct file_dat read_file(char *path)
-{
-        FILE *fp = NULL;
-        struct file_dat fd = {0};
-
-        fp = fopen(path, "rb");
-        if (fp == NULL) {
-                perror("fopen");
-                return fd;
-        }
-
-        if (fseek(fp, 0, SEEK_END) != 0) {
-                perror("fseek");
-                fclose(fp);
-                fp = NULL;
-                return fd;
-        }
-
-        const int size = ftell(fp);
-        if (size == -1) {
-                perror("ftell");
-                fclose(fp);
-                fp = NULL;
-                return fd;
-        }
-        if (fseek(fp, 0, 0) != 0) {
-                perror("fseek");
-                fclose(fp);
-                fp = NULL;
-                return fd;
-        }
-
-        char *data = mem_alloc(size);
-
-        fread(data, size, 1, fp);
-        if (ferror(fp)) {
-                perror("fread");
-                free(data);
-                data = NULL;
-        } else {
-                fd.data = data;
-                fd.len = size;
-        }
-
-        fclose(fp);
-        fp = NULL;
-        return fd;
-}
+#endif
 

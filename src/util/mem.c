@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/mem.h"
+#include "util/mem.h"
 
 #include <stdlib.h>
 #include <stdio.h>

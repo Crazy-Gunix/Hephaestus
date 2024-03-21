@@ -41,10 +41,10 @@
 #include <raygui.h>
 #include <dark/style_dark.h>
 
-#include "engine/mem.h"
-#include "engine/lua_util.h"
-#include "engine/file_util.h"
-#include "engine/archive_util.h"
+#include "util/mem.h"
+#include "util/lua_helper.h"
+#include "util/file.h"
+#include "util/archive_helper.h"
 
 
 

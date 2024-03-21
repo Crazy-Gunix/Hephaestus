@@ -29,8 +29,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ENGINE_MEM_H
-#define ENGINE_MEM_H
+#ifndef UTIL_MEM_H
+#define UTIL_MEM_H
 
 #include <stddef.h>
 

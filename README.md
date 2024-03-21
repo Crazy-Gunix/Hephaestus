@@ -76,7 +76,6 @@ For support, email <mailto:project.gunix@skiff.com>.
 
 ## Roadmap
 
-- Implement Lua bindings for engine and raylib.
 - Create a custom logging suite.
 - Create asset management utilities (textures, audio, etc).
 - Combine archive utils, Lua, assets, and JSON/YAML configs to create "game packs".
@@ -95,5 +94,5 @@ Please adhere to this project's `code of conduct`.
 
 ## License
 
-[BSD 3-clause](https://choosealicense.com/licenses/bsd-3-clause/)
+[BSD 3-Clause](https://choosealicense.com/licenses/bsd-3-clause/)
 

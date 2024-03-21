@@ -29,16 +29,63 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ENGINE_LUA_UTIL_H
-#define ENGINE_LUA_UTIL_H
+#include "util/file.h"
 
-#include <stdbool.h>
-#include <lua.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-lua_State *init_lua(void);
+#include <raylib.h>
 
-void lua_script_init(lua_State *L, const char *data);
-void lua_script_exit(lua_State *L);
-bool lua_script_loop(lua_State *L);
+#include "util/mem.h"
 
-#endif
+
+
+struct file_dat read_file(char *path)
+{
+        FILE *fp = NULL;
+        struct file_dat fd = {0};
+
+        fp = fopen(path, "rb");
+        if (fp == NULL) {
+                perror("fopen");
+                return fd;
+        }
+
+        if (fseek(fp, 0, SEEK_END) != 0) {
+                perror("fseek");
+                fclose(fp);
+                fp = NULL;
+                return fd;
+        }
+
+        const int size = ftell(fp);
+        if (size == -1) {
+                perror("ftell");
+                fclose(fp);
+                fp = NULL;
+                return fd;
+        }
+        if (fseek(fp, 0, 0) != 0) {
+                perror("fseek");
+                fclose(fp);
+                fp = NULL;
+                return fd;
+        }
+
+        char *data = mem_alloc(size);
+
+        fread(data, size, 1, fp);
+        if (ferror(fp)) {
+                perror("fread");
+                free(data);
+                data = NULL;
+        } else {
+                fd.data = data;
+                fd.len = size;
+        }
+
+        fclose(fp);
+        fp = NULL;
+        return fd;
+}
+

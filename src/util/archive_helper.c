@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/archive_util.h"
+#include "util/archive_helper.h"
 
 #include <stdio.h>
 

@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/lua_util.h"
+#include "util/lua_helper.h"
 
 #include <lauxlib.h>
 #include <lualib.h>

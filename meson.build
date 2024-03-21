@@ -38,24 +38,31 @@ enginel_src = [
   'src/enginel/window.c'
 ]
 
-engine_src = [
-  'src/engine/mem.c',
-  'src/engine/engine.c',
-  'src/engine/file_util.c',
-  'src/engine/lua_util.c',
-  'src/engine/json_util.c',
-  'src/engine/archive_util.c',
-  'src/engine/raygui_impl.c'
+util_src = [
+  'src/util/file.c',
+  'src/util/lua_helper.c',
+  'src/util/json_helper.c',
+  'src/util/archive_helper.c',
+  'src/util/mem.c'
 ]
 
 enginel = library('enginel', enginel_src,
   dependencies: deps,
-  include_directories: incdirs
+  include_directories: incdirs,
 )
-engine = library('engine', engine_src,
+util = library('util', util_src,
   dependencies: deps,
   include_directories: incdirs,
   link_with: enginel
+)
+raygui_impl = static_library('raygui', 'src/raygui_impl.c',
+  dependencies: deps,
+  include_directories: incdirs
+)
+engine = library('engine', 'src/engine/engine.c',
+  dependencies: deps,
+  include_directories: incdirs,
+  link_with: [enginel, util, raygui_impl]
 )
 
 executable('hephaestus', 'src/main.c',

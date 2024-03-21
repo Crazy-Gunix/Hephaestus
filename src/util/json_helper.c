@@ -29,7 +29,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "engine/json_util.h"
+#include "util/json_helper.h"
 
 #include <raylib.h>
 #include <jansson.h>
