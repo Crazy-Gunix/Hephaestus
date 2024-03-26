@@ -16,6 +16,18 @@ endif
 cc = meson.get_compiler('c')
 m_dep = cc.find_library('m', required: false)
 
+conf_data = configuration_data()
+
+conf_data.set('version', '0.0.1')
+if cc.has_header('syslog.h')
+  conf_data.set('syslog', true)
+endif
+conf_data.set('color', true)
+
+configure_file(input : 'config.h.in',
+               output : 'config.h',
+               configuration : conf_data)
+
 deps = [
   m_dep,
   raylib_dep,
@@ -43,7 +55,8 @@ util_src = [
   'src/util/lua_helper.c',
   'src/util/json_helper.c',
   'src/util/archive_helper.c',
-  'src/util/mem.c'
+  'src/util/mem.c',
+  'src/util/log.c'
 ]
 
 enginel = library('enginel', enginel_src,

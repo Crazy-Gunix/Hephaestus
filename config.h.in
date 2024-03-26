@@ -1,0 +1,3 @@
+#define VERSION "@version@"
+#define USE_SYSLOG @syslog@
+#define COLOR_PROMPT @color@

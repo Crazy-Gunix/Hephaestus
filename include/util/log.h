@@ -29,30 +29,33 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef ENGINE_ENGINE_H
-#define ENGINE_ENGINE_H
+#ifndef UTIL_LOG_H
+#define UTIL_LOG_H
 
+#include <stdio.h>
 #include <stdbool.h>
 
-#include <lua.h>
-
-#include "util/log.h"
-
-struct engine {
-        lua_State *L;
-
+struct logger {
+        FILE *fp;
+        char *log_path;
+        int default_lvl;
+        bool log_file;
         bool init;
-
-        bool loadable_file;
-        bool file_loaded;
-        char *loadable_path;
-        char *loaded_data;
-
-        struct logger log;
 };
 
-void engine_init(struct engine *e);
-void engine_run(struct engine *e);
-void engine_cleanup(struct engine *e);
+enum log_levels {
+        LINFO,
+        LDEBUG,
+        LWARN,
+        LERROR,
+        LFATAL
+};
+
+void logger_init(struct logger *l);
+void logger_quit(struct logger *l);
+
+void printlog(const int lvl, const char *msg, struct logger *l);
+void errnolog(const int lvl, struct logger *l);
 
 #endif
+

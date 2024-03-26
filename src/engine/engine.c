@@ -45,6 +45,7 @@
 #include "util/lua_helper.h"
 #include "util/file.h"
 #include "util/archive_helper.h"
+#include "util/log.h"
 
 
 
@@ -58,7 +59,9 @@ static inline void load_file_dat(struct engine *e)
         strncpy(e->loadable_path, f.paths[0], size);
         
         UnloadDroppedFiles(f);
+        
         TraceLog(LOG_DEBUG, "file dropped: %s", e->loadable_path);
+
         return;
 }
 
@@ -68,7 +71,7 @@ static inline void yes_load_file(struct engine *e)
         e->loadable_file = false;
 
         if (fd.len == 0) {
-                TraceLog(LOG_ERROR, "failed to load file");
+                printlog(LERROR, "failed to load file", &e->log);
                 free(e->loadable_path);
                 e->loadable_path = NULL;
                 return;
@@ -98,7 +101,9 @@ void engine_init(struct engine *e)
         InitWindow(800, 600, "hephaestus");
         GuiLoadStyleDark();
         SetTargetFPS(120);
-        
+
+        logger_init(&e->log);
+
         e->L = init_lua();
         if (e->L == NULL) {
                 CloseWindow();
@@ -106,6 +111,7 @@ void engine_init(struct engine *e)
         }
 
         e->init = true;
+
         return;
 }
 
@@ -163,9 +169,12 @@ void engine_cleanup(struct engine *e)
         if (e->file_loaded)
                 lua_script_exit(e->L);
         lua_close(e->L);
-        TraceLog(LOG_INFO, "Closed Lua state");
+
+        printlog(LINFO, "Closed Lua state", &e->log);
 
         CloseWindow();
+
+        logger_quit(&e->log);
 
         if (e->loadable_path != NULL) {
                 free(e->loadable_path);
